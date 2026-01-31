@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerScript : MonoBehaviour
 {
+    public Camera camera;
 
     public InputActionReference move;
     public InputActionReference jump;
@@ -31,8 +32,11 @@ public class PlayerScript : MonoBehaviour
 
     private int dimension = 2;
 
-    [SerializeReference] public bool canJump = true;
-    [SerializeReference] public bool airborne = false;
+    private float zoomedFOV = 50.0f;
+    private float normalFOV = 90.0f;
+
+    private bool canJump = true;
+    private bool airborne = false;
 
     private bool changingDimension = false;
     private bool actionAvailable = true;
@@ -79,6 +83,7 @@ public class PlayerScript : MonoBehaviour
         {
             TimeStop();
         }
+        ChangeFOV();
     }
 
     void ChangeDimension()
@@ -135,6 +140,18 @@ public class PlayerScript : MonoBehaviour
                 }
         }
         
+    }
+
+    void ChangeFOV()
+    {
+        if (changingDimension)
+        {
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, zoomedFOV, 0.8f * Time.deltaTime);
+        }
+        else
+        {
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, normalFOV, 1.0f * Time.deltaTime);
+        }
     }
 
     void TimeStop()
