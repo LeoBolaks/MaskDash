@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,7 @@ public class PlayerScript : MonoBehaviour
     public InputActionReference move;
     public InputActionReference jump;
 
+    public InputActionReference changeDimension;
     public InputActionReference dim1;
     public InputActionReference dim2;
     public InputActionReference dim3;
@@ -29,6 +31,15 @@ public class PlayerScript : MonoBehaviour
 
     private bool canJump = true;
     private bool airborne = false;
+    private bool changingDimension = false;
+    private bool actionAvailable = true;
+
+    IEnumerator PauseActionCoRoutine()
+    {
+        actionAvailable = false;
+        yield return new WaitForSeconds(0.2f);
+        actionAvailable = true;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -55,8 +66,10 @@ public class PlayerScript : MonoBehaviour
             canJump = false;
             airborne = true;
         }
-        ChangeDimension();
-
+        if (actionAvailable)
+        {
+            ChangeDimension();
+        }
     }
 
     void ChangeDimension()
@@ -69,11 +82,13 @@ public class PlayerScript : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 2;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     if (dim3.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + (870.0f * 2));
                         dimension = 3;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     break;
                 }
@@ -83,11 +98,13 @@ public class PlayerScript : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 1;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     if (dim3.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 3;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     break;
                 }
@@ -97,15 +114,18 @@ public class PlayerScript : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - (870.0f * 2));
                         dimension = 1;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     if (dim2.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 2;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     break;
                 }
         }
+        
     }
 
     private void FixedUpdate()
