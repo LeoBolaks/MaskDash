@@ -12,9 +12,9 @@ public class PlayerScript : MonoBehaviour
     public InputActionReference jump;
 
     public InputActionReference changeDimension;
-    public InputActionReference dim1;
-    public InputActionReference dim2;
-    public InputActionReference dim3;
+    public InputActionReference dimUp;
+    public InputActionReference dimDown;
+
 
     public Rigidbody rigidBody;
 

@@ -6,17 +6,12 @@ public class TimerScript : MonoBehaviour
     [SerializeField] float m_timeRemaining;
     private void Update()
     {
-        if (m_timeRemaining > 0)
-        {
-            m_timeRemaining -= Time.deltaTime;
-        }
-        else
-        {
-            m_timeRemaining = 0;
-            Debug.Log("Game Over");
-        }
+     
+        m_timeRemaining += Time.deltaTime;
+        
+       
 
-        int seconds = Mathf.FloorToInt(m_timeRemaining % 60);
-        m_timerText.text = string.Format("{00:00}", seconds);
+        //int seconds = Mathf.FloorToInt(m_timeRemaining % 60);
+        m_timerText.text = string.Format("{00:00.00}", m_timeRemaining);
     }
 }
