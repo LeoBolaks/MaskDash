@@ -8,6 +8,8 @@ public class JumpPad : MonoBehaviour
     {
         Debug.Log("Object entered collider");
 
+        other.gameObject.GetComponent<PlayerScript>().canJump = false;
+        other.gameObject.GetComponent<PlayerScript>().airborne = true;
         other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, JumpForce, 0));
     }
 }

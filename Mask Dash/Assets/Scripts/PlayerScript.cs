@@ -31,8 +31,9 @@ public class PlayerScript : MonoBehaviour
 
     private int dimension = 2;
 
-    [SerializeReference] private bool canJump = true;
-    [SerializeReference] private bool airborne = false;
+    [SerializeReference] public bool canJump = true;
+    [SerializeReference] public bool airborne = false;
+
     private bool changingDimension = false;
     private bool actionAvailable = true;
 
@@ -78,8 +79,6 @@ public class PlayerScript : MonoBehaviour
         {
             TimeStop();
         }
-
-        Debug.Log("");
     }
 
     void ChangeDimension()
@@ -172,7 +171,6 @@ public class PlayerScript : MonoBehaviour
         {
             vel = new Vector3(0.0f , 0.0f, move.action.ReadValue<Vector2>().x * -1);
         }
-        Debug.Log("Forward Velocity: " + rigidBody.linearVelocity.x);
         if (!changingDimension)
         {
             rigidBody.AddForce(vel * speed);
@@ -203,6 +201,11 @@ public class PlayerScript : MonoBehaviour
         {
             rayDistance = Vector3.Distance(rigidBody.position, hit.point);
             Debug.DrawLine(hit.point, new Vector3(hit.point.x + 10, hit.point.y, hit.point.z), Color.blue);
+            Debug.Log("Ray Distance " + rayDistance);
+        }
+        else
+        {
+            rayDistance = 999.0f;
         }
     }
 }
