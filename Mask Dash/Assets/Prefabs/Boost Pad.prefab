@@ -126,3 +126,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   BoostForce: 2000
+  JumpForce: 2000
