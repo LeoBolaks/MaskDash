@@ -14,7 +14,8 @@ public class PlayerScript : MonoBehaviour
     public LayerMask layersToHit;
     private float rayDistance = 0.0f;
 
-    private float speed = 40.0f;
+    private float speed = 30.0f;
+    private float maxSpeed = 50.0f;
 
     private Vector3 vel;
 
@@ -46,6 +47,7 @@ public class PlayerScript : MonoBehaviour
             canJump = false;
             airborne = true;
         }
+        
     }
 
     private void FixedUpdate()
@@ -59,9 +61,12 @@ public class PlayerScript : MonoBehaviour
         {
             vel = new Vector3(0.0f , 0.0f, move.action.ReadValue<Vector2>().x * -1);
         }
-
+        Debug.Log("Forward Velocity: " + rigidBody.linearVelocity.x);
         rigidBody.AddForce(vel * speed);
 
+        Vector3 v = rigidBody.linearVelocity;
+        v.x = Mathf.Clamp(v.x, -maxSpeed, maxSpeed);
+        rigidBody.linearVelocity = v;
        
     }
 
@@ -77,7 +82,6 @@ public class PlayerScript : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistanceRay, layersToHit))
         {
             rayDistance = Vector3.Distance(rigidBody.position, hit.point);
-            Debug.Log("ray Distance " + rayDistance);
             Debug.DrawLine(hit.point, new Vector3(hit.point.x + 10, hit.point.y, hit.point.z), Color.blue);
         }
     }
