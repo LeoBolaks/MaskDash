@@ -1564,15 +1564,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimerScript
   m_timerText: {fileID: 968302967}
+
   m_timeRemaining: 0
 --- !u!4 &973703143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2344352434502304108, guid: a56fcf764a7b7b645ab7ccad42adae58, type: 3}
   m_PrefabInstance: {fileID: 368138311}
   m_PrefabAsset: {fileID: 0}
-=======
   m_timeRemaining: 30
->>>>>>> Stashed changes
+
 --- !u!1001 &1014340008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2860,7 +2860,7 @@ Transform:
   - {fileID: 1150296581}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
-<<<<<<< Updated upstream
+
 --- !u!114 &1793934385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3079,8 +3079,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812417985}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-=======
->>>>>>> Stashed changes
 --- !u!1 &1816490223
 GameObject:
   m_ObjectHideFlags: 0
