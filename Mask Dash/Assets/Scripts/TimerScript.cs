@@ -9,7 +9,6 @@ public class TimerScript : MonoBehaviour
         if (m_timeRemaining > 0)
         {
             m_timeRemaining -= Time.deltaTime;
-
         }
         else
         {

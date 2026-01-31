@@ -459,7 +459,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 857ab3510a09d6941a956ecb3f5902fa, type: 2}
     - target: {fileID: 919132149155446097, guid: 1cff56e448d1ae44a81b6b978c5e7cc2, type: 3}
       propertyPath: m_Name
-      value: Mask Dash map 1 (2)
+      value: Mask Dash map 2
       objectReference: {fileID: 0}
     - target: {fileID: 3355947057979480241, guid: 1cff56e448d1ae44a81b6b978c5e7cc2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -808,7 +808,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a84bbf4d2d1b7e945b63127d36673562, type: 2}
     - target: {fileID: 919132149155446097, guid: 1cff56e448d1ae44a81b6b978c5e7cc2, type: 3}
       propertyPath: m_Name
-      value: Mask Dash map 1 (1)
+      value: Mask Dash map 3
       objectReference: {fileID: 0}
     - target: {fileID: 3355947057979480241, guid: 1cff56e448d1ae44a81b6b978c5e7cc2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
