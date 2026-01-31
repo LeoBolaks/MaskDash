@@ -40,6 +40,8 @@ public class PlayerScript : MonoBehaviour
 
     private bool changingDimension = false;
     private bool actionAvailable = true;
+    private bool stageStarted = false;
+    private bool gameOver = false;
 
     private Vector3 savedVelocity;
 
@@ -84,6 +86,11 @@ public class PlayerScript : MonoBehaviour
             TimeStop();
         }
         ChangeFOV();
+    }
+
+    public void StartStage()
+    {
+        stageStarted = true;
     }
 
     void ChangeDimension()
