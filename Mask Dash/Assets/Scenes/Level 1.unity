@@ -5470,6 +5470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 610fffb31fb45dd49bb0eda37edce4c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  camera: {fileID: 1150296583}
   move: {fileID: -1680190386980627800, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   jump: {fileID: -2099379676528639254, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   changeDimension: {fileID: 1781555164194001046, guid: 289c1b55c9541489481df5cc06664110, type: 3}
@@ -5480,8 +5481,6 @@ MonoBehaviour:
   layersToHit:
     serializedVersion: 2
     m_Bits: 8
-  canJump: 1
-  airborne: 0
 --- !u!54 &1793934380
 Rigidbody:
   m_ObjectHideFlags: 0
