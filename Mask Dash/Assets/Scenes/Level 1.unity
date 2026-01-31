@@ -1564,7 +1564,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimerScript
   m_timerText: {fileID: 968302967}
-<<<<<<< Updated upstream
   m_timeRemaining: 0
 --- !u!4 &973703143 stripped
 Transform:
