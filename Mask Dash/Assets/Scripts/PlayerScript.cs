@@ -31,8 +31,8 @@ public class PlayerScript : MonoBehaviour
 
     private int dimension = 2;
 
-    private bool canJump = true;
-    private bool airborne = false;
+    [SerializeReference] private bool canJump = true;
+    [SerializeReference] private bool airborne = false;
     private bool changingDimension = false;
     private bool actionAvailable = true;
 
@@ -78,6 +78,8 @@ public class PlayerScript : MonoBehaviour
         {
             TimeStop();
         }
+
+        Debug.Log("");
     }
 
     void ChangeDimension()
