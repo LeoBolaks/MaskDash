@@ -1,11 +1,17 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerScript : MonoBehaviour
 {
+
     public InputActionReference move;
     public InputActionReference jump;
+
+    public InputActionReference dim1;
+    public InputActionReference dim2;
+    public InputActionReference dim3;
 
     public Rigidbody rigidBody;
 
@@ -19,13 +25,15 @@ public class PlayerScript : MonoBehaviour
 
     private Vector3 vel;
 
+    private int dimension = 2;
+
     private bool canJump = true;
     private bool airborne = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -47,7 +55,57 @@ public class PlayerScript : MonoBehaviour
             canJump = false;
             airborne = true;
         }
-        
+        ChangeDimension();
+
+    }
+
+    void ChangeDimension()
+    {
+        switch(dimension)
+        {
+            case 1:
+                {
+                    if (dim2.action.WasPressedThisFrame())
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
+                        dimension = 2;
+                    }
+                    if (dim3.action.WasPressedThisFrame())
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + (870.0f * 2));
+                        dimension = 3;
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    if (dim1.action.WasPressedThisFrame())
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
+                        dimension = 1;
+                    }
+                    if (dim3.action.WasPressedThisFrame())
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
+                        dimension = 3;
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    if (dim1.action.WasPressedThisFrame())
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - (870.0f * 2));
+                        dimension = 1;
+                    }
+                    if (dim2.action.WasPressedThisFrame())
+                    {
+                        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
+                        dimension = 2;
+                    }
+                    break;
+                }
+        }
     }
 
     private void FixedUpdate()
