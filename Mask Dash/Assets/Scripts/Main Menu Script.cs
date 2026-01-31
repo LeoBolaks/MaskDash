@@ -1,16 +1,27 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void Awake()
     {
-        
+        Application.targetFrameRate = 60;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        
+        SceneManager.LoadScene("Level 1");
     }
+
+    public void Options()
+    {
+
+    }
+
+    public void Exit()
+    {
+        Debug.Log("Exit button pressed");
+    }
+
 }
