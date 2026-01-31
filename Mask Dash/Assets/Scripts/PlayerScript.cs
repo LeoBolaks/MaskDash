@@ -33,7 +33,7 @@ public class PlayerScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -126,6 +126,7 @@ public class PlayerScript : MonoBehaviour
         v.x = Mathf.Clamp(v.x, -maxSpeed, maxSpeed);
         rigidBody.linearVelocity = v;
        
+
     }
 
     private void OnCollisionEnter(Collision collision)
