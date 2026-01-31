@@ -35,8 +35,8 @@ public class PlayerScript : MonoBehaviour
     private float zoomedFOV = 50.0f;
     private float normalFOV = 90.0f;
 
-    private bool canJump = true;
-    private bool airborne = false;
+    [SerializeField]private bool canJump = true;
+    [SerializeField]private bool airborne = false;
 
     private bool changingDimension = false;
     private bool actionAvailable = true;
@@ -92,13 +92,13 @@ public class PlayerScript : MonoBehaviour
         {
             case 1:
                 {
-                    if (dim2.action.WasPressedThisFrame())
+                    if (dimUp.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 2;
                         StartCoroutine(PauseActionCoRoutine());
                     }
-                    if (dim3.action.WasPressedThisFrame())
+                    if (dimDown.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + (870.0f * 2));
                         dimension = 3;
@@ -108,13 +108,13 @@ public class PlayerScript : MonoBehaviour
                 }
             case 2:
                 {
-                    if (dim1.action.WasPressedThisFrame())
+                    if (dimDown.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 1;
                         StartCoroutine(PauseActionCoRoutine());
                     }
-                    if (dim3.action.WasPressedThisFrame())
+                    if (dimUp.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 3;
@@ -124,13 +124,13 @@ public class PlayerScript : MonoBehaviour
                 }
             case 3:
                 {
-                    if (dim1.action.WasPressedThisFrame())
+                    if (dimUp.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - (870.0f * 2));
                         dimension = 1;
                         StartCoroutine(PauseActionCoRoutine());
                     }
-                    if (dim2.action.WasPressedThisFrame())
+                    if (dimDown.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 2;
