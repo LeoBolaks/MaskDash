@@ -116,7 +116,7 @@ Material:
     - _Base_Colour: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Main_Colour: {r: 0.26205456, g: 0.7861634, b: 0, a: 1}
+    - _Main_Colour: {r: 0.33500004, g: 1, b: 0, a: 1}
     - _Outermost_Glow: {r: 0.7604127, g: 1, b: 0.5691823, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _Outline_Colour: {r: 0.35912216, g: 1, b: 0, a: 1}
