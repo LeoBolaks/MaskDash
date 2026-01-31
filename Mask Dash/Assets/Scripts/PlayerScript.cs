@@ -218,7 +218,6 @@ public class PlayerScript : MonoBehaviour
         {
             rayDistance = Vector3.Distance(rigidBody.position, hit.point);
             Debug.DrawLine(hit.point, new Vector3(hit.point.x + 10, hit.point.y, hit.point.z), Color.blue);
-            Debug.Log("Ray Distance " + rayDistance);
         }
         else
         {
