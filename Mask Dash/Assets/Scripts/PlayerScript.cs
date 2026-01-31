@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,7 @@ public class PlayerScript : MonoBehaviour
     public InputActionReference move;
     public InputActionReference jump;
 
+    public InputActionReference changeDimension;
     public InputActionReference dim1;
     public InputActionReference dim2;
     public InputActionReference dim3;
@@ -21,6 +23,8 @@ public class PlayerScript : MonoBehaviour
     private float rayDistance = 0.0f;
 
     private float speed = 30.0f;
+    private float speedDown = 0.1f;
+   
     private float maxSpeed = 50.0f;
 
     private Vector3 vel;
@@ -29,6 +33,17 @@ public class PlayerScript : MonoBehaviour
 
     private bool canJump = true;
     private bool airborne = false;
+    private bool changingDimension = false;
+    private bool actionAvailable = true;
+
+    private Vector3 savedVelocity;
+
+    IEnumerator PauseActionCoRoutine()
+    {
+        actionAvailable = false;
+        yield return new WaitForSeconds(0.2f);
+        actionAvailable = true;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -55,8 +70,14 @@ public class PlayerScript : MonoBehaviour
             canJump = false;
             airborne = true;
         }
-        ChangeDimension();
-
+        if (actionAvailable && changingDimension)
+        {
+            ChangeDimension();
+        }
+        if (changeDimension.action.WasPressedThisFrame() && actionAvailable)
+        {
+            TimeStop();
+        }
     }
 
     void ChangeDimension()
@@ -69,11 +90,13 @@ public class PlayerScript : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 2;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     if (dim3.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + (870.0f * 2));
                         dimension = 3;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     break;
                 }
@@ -83,11 +106,13 @@ public class PlayerScript : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 1;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     if (dim3.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 3;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     break;
                 }
@@ -97,17 +122,43 @@ public class PlayerScript : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - (870.0f * 2));
                         dimension = 1;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     if (dim2.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 2;
+                        StartCoroutine(PauseActionCoRoutine());
                     }
                     break;
                 }
         }
+        
     }
 
+    void TimeStop()
+    {
+        if (!changingDimension)
+        {
+            savedVelocity = rigidBody.linearVelocity;
+            //rigidBody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY;
+            rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x * speedDown, rigidBody.linearVelocity.y * speedDown, rigidBody.linearVelocity.z * speedDown);
+            rigidBody.useGravity = false;
+            changingDimension = true;
+            StartCoroutine(PauseActionCoRoutine());
+
+        }
+        else
+        {
+            //rigidBody.constraints = RigidbodyConstraints.None;
+            //rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            rigidBody.linearVelocity = savedVelocity;
+            rigidBody.useGravity = true;
+            changingDimension = false;
+            StartCoroutine(PauseActionCoRoutine());
+
+        }
+    }
     private void FixedUpdate()
     {
         Debug.DrawRay(ray.origin, ray.direction * maxDistanceRay, Color.red);
@@ -120,9 +171,17 @@ public class PlayerScript : MonoBehaviour
             vel = new Vector3(0.0f , 0.0f, move.action.ReadValue<Vector2>().x * -1);
         }
         Debug.Log("Forward Velocity: " + rigidBody.linearVelocity.x);
-        rigidBody.AddForce(vel * speed);
+        if (!changingDimension)
+        {
+            rigidBody.AddForce(vel * speed);
+        }
+        else
+        {
+            rigidBody.AddForce((vel * speed) * speedDown);
+            rigidBody.AddForce(0.0f, -0.1f, 0.0f);
 
-        Vector3 v = rigidBody.linearVelocity;
+        }
+            Vector3 v = rigidBody.linearVelocity;
         v.x = Mathf.Clamp(v.x, -maxSpeed, maxSpeed);
         rigidBody.linearVelocity = v;
        
