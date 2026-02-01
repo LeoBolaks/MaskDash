@@ -3,6 +3,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -15,8 +16,12 @@ public class PlayerScript : MonoBehaviour
     public GameObject redMask;
     public GameObject blueMask;
 
+    public GameObject startPointMap;
+
     public InputActionReference move;
     public InputActionReference jump;
+
+    public InputActionReference returnToMenu;
 
     public InputActionReference changeDimension;
     public InputActionReference dimUp;
@@ -76,6 +81,12 @@ public class PlayerScript : MonoBehaviour
         canSwapDims = true;
     }
 
+    IEnumerator BackToMenuCoRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        SceneManager.LoadScene("Main Menu");
+    }
+
     private IEnumerator animateMaskCoRoutine()
     {
         yield return new WaitForSeconds(0.3f);
@@ -133,6 +144,10 @@ public class PlayerScript : MonoBehaviour
             TimeStop();
         }
         ChangeFOV();
+        if (returnToMenu.action.WasPressedThisFrame())
+        {
+            SceneManager.LoadScene("Main Menu");
+        }
     }
 
     public void StartStage()
@@ -212,6 +227,12 @@ public class PlayerScript : MonoBehaviour
         {
             camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, normalFOV, 1.0f * Time.deltaTime);
         }
+    }
+
+    public void SetGameOver()
+    {
+        gameOver = true;
+        StartCoroutine(BackToMenuCoRoutine());
     }
 
     void TimeStop()
@@ -398,9 +419,13 @@ public class PlayerScript : MonoBehaviour
         return changingDimension;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.tag == "Death")
+        {
+            transform.position = startPointMap.transform.position;
+            rigidBody.linearVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+        }
     }
 
     void RayCollisionWithGround()
