@@ -47,7 +47,7 @@ public class MainMenuScript : MonoBehaviour
 
     public void Exit()
     {
-        Debug.Log("Exit button pressed");
+        Application.Quit();
     }
 
 }
