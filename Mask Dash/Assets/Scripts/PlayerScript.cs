@@ -33,7 +33,7 @@ public class PlayerScript : MonoBehaviour
     private int dimension = 2;
 
     private float zoomedFOV = 50.0f;
-    private float normalFOV = 90.0f;
+    private float normalFOV = 100.0f;
 
     [SerializeField]private bool canJump = true;
     [SerializeField]private bool airborne = false;
@@ -165,7 +165,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (!changingDimension)
         {
-            savedVelocity = rigidBody.linearVelocity;
+            savedVelocity.x = rigidBody.linearVelocity.x;
             //rigidBody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY;
             rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x * speedDown, rigidBody.linearVelocity.y * speedDown, rigidBody.linearVelocity.z * speedDown);
             rigidBody.useGravity = false;
@@ -177,7 +177,7 @@ public class PlayerScript : MonoBehaviour
         {
             //rigidBody.constraints = RigidbodyConstraints.None;
             //rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            rigidBody.linearVelocity = savedVelocity;
+            rigidBody.linearVelocity = new Vector3(savedVelocity.x, rigidBody.linearVelocity.y, rigidBody.linearVelocity.z);
             rigidBody.useGravity = true;
             changingDimension = false;
             StartCoroutine(PauseActionCoRoutine());
@@ -210,6 +210,11 @@ public class PlayerScript : MonoBehaviour
         rigidBody.linearVelocity = v;
        
 
+    }
+
+    public bool GetChangingDimension()
+    {
+        return changingDimension;
     }
 
     private void OnCollisionEnter(Collision collision)
