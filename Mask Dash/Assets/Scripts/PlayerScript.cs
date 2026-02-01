@@ -15,6 +15,8 @@ public class PlayerScript : MonoBehaviour
     public GameObject redMask;
     public GameObject blueMask;
 
+    public GameObject startPointMap;
+
     public InputActionReference move;
     public InputActionReference jump;
 
@@ -398,9 +400,12 @@ public class PlayerScript : MonoBehaviour
         return changingDimension;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.tag == "Death")
+        {
+            transform.position = startPointMap.transform.position;
+        }
     }
 
     void RayCollisionWithGround()
