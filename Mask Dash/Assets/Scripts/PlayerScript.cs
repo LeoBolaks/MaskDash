@@ -8,6 +8,10 @@ public class PlayerScript : MonoBehaviour
 {
     public Camera camera;
 
+    public GameObject maskStartPoint;
+    public GameObject maskEndPoint;
+    public GameObject greenMask;
+
     public InputActionReference move;
     public InputActionReference jump;
 
@@ -42,6 +46,9 @@ public class PlayerScript : MonoBehaviour
     private bool actionAvailable = true;
     private bool stageStarted = false;
     private bool gameOver = false;
+
+    private bool maskOut = false;
+    private float distanceToMaskEndPoint = 0.0f;
 
     private Vector3 savedVelocity;
 
@@ -202,13 +209,21 @@ public class PlayerScript : MonoBehaviour
         else
         {
             rigidBody.AddForce((vel * speed) * speedDown);
-            rigidBody.AddForce(0.0f, -0.1f, 0.0f);
+            rigidBody.AddForce(0.0f, -0.05f, 0.0f);
 
         }
             Vector3 v = rigidBody.linearVelocity;
         v.x = Mathf.Clamp(v.x, -maxSpeed, maxSpeed);
         rigidBody.linearVelocity = v;
        
+        if (changingDimension)
+        {
+            greenMask.transform.position = Vector3.Lerp(greenMask.transform.position, maskEndPoint.transform.position, 3.0f * Time.deltaTime);
+        }
+        else
+        {
+            greenMask.transform.position = Vector3.Lerp(greenMask.transform.position, maskStartPoint.transform.position, 3.0f * Time.deltaTime);
+        }    
 
     }
 
