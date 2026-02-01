@@ -423,8 +423,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.tag == "Death")
         {
-            transform.position = startPointMap.transform.position;
-            rigidBody.linearVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+            SceneManager.LoadScene("Main Menu");
         }
     }
 
