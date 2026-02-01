@@ -10,7 +10,10 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject maskStartPoint;
     public GameObject maskEndPoint;
+    public GameObject maskMovePoint;
     public GameObject greenMask;
+    public GameObject redMask;
+    public GameObject blueMask;
 
     public InputActionReference move;
     public InputActionReference jump;
@@ -18,6 +21,12 @@ public class PlayerScript : MonoBehaviour
     public InputActionReference changeDimension;
     public InputActionReference dimUp;
     public InputActionReference dimDown;
+
+    private MeshRenderer[] childRenderersGreen;
+    private MeshRenderer[] childRenderersRed;
+    private MeshRenderer[] childRenderersBlue;
+
+    AnimatorStateInfo greenMaskState;
 
 
     public Rigidbody rigidBody;
@@ -44,6 +53,7 @@ public class PlayerScript : MonoBehaviour
 
     private bool changingDimension = false;
     private bool actionAvailable = true;
+    private bool canSwapDims = true;
     private bool stageStarted = false;
     private bool gameOver = false;
 
@@ -55,14 +65,33 @@ public class PlayerScript : MonoBehaviour
     IEnumerator PauseActionCoRoutine()
     {
         actionAvailable = false;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.8f);
         actionAvailable = true;
+    }
+
+    IEnumerator PauseSwappingDimsCoRoutine()
+    {
+        canSwapDims = false;
+        yield return new WaitForSeconds(0.3f);
+        canSwapDims = true;
+    }
+
+    private IEnumerator animateMaskCoRoutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        greenMask.GetComponent<Animator>().SetTrigger("Slowed");
+        blueMask.GetComponent<Animator>().SetTrigger("Slowed");
+        redMask.GetComponent<Animator>().SetTrigger("Slowed");
+        maskOut = true;
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        childRenderersGreen = greenMask.GetComponentsInChildren<MeshRenderer>();
+        childRenderersBlue = blueMask.GetComponentsInChildren<MeshRenderer>();
+        childRenderersRed = redMask.GetComponentsInChildren<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -84,12 +113,23 @@ public class PlayerScript : MonoBehaviour
             canJump = false;
             airborne = true;
         }
-        if (actionAvailable && changingDimension)
+        if (changingDimension && canSwapDims && maskOut)
         {
             ChangeDimension();
         }
         if (changeDimension.action.WasPressedThisFrame() && actionAvailable)
         {
+            if (maskOut)
+            {
+                greenMask.GetComponent<Animator>().SetTrigger("Resumed");
+                blueMask.GetComponent<Animator>().SetTrigger("Resumed");
+                redMask.GetComponent<Animator>().SetTrigger("Resumed");
+                maskOut = false;
+            }
+            else
+            {
+                StartCoroutine(animateMaskCoRoutine());
+            }
             TimeStop();
         }
         ChangeFOV();
@@ -111,12 +151,14 @@ public class PlayerScript : MonoBehaviour
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 2;
                         StartCoroutine(PauseActionCoRoutine());
+                        StartCoroutine(PauseSwappingDimsCoRoutine());
                     }
                     if (dimDown.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + (870.0f * 2));
                         dimension = 3;
                         StartCoroutine(PauseActionCoRoutine());
+                        StartCoroutine(PauseSwappingDimsCoRoutine());
                     }
                     break;
                 }
@@ -127,12 +169,14 @@ public class PlayerScript : MonoBehaviour
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 1;
                         StartCoroutine(PauseActionCoRoutine());
+                        StartCoroutine(PauseSwappingDimsCoRoutine());
                     }
                     if (dimUp.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 870.0f);
                         dimension = 3;
                         StartCoroutine(PauseActionCoRoutine());
+                        StartCoroutine(PauseSwappingDimsCoRoutine());
                     }
                     break;
                 }
@@ -143,12 +187,14 @@ public class PlayerScript : MonoBehaviour
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - (870.0f * 2));
                         dimension = 1;
                         StartCoroutine(PauseActionCoRoutine());
+                        StartCoroutine(PauseSwappingDimsCoRoutine());
                     }
                     if (dimDown.action.WasPressedThisFrame())
                     {
                         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 870.0f);
                         dimension = 2;
                         StartCoroutine(PauseActionCoRoutine());
+                        StartCoroutine(PauseSwappingDimsCoRoutine());
                     }
                     break;
                 }
@@ -215,14 +261,134 @@ public class PlayerScript : MonoBehaviour
             Vector3 v = rigidBody.linearVelocity;
         v.x = Mathf.Clamp(v.x, -maxSpeed, maxSpeed);
         rigidBody.linearVelocity = v;
-       
+
+        greenMask.transform.position = maskMovePoint.transform.position;
+        redMask.transform.position = maskMovePoint.transform.position;
+        blueMask.transform.position = maskMovePoint.transform.position;
+
+        switch (dimension)
+        {
+            case 1:
+                {
+                    if (!maskOut)
+                    {
+                        foreach (MeshRenderer rend in childRenderersBlue)
+                        {
+                            rend.enabled = false;
+                        }
+                        foreach (MeshRenderer rend in childRenderersRed)
+                        {
+                            rend.enabled = true;
+                        }
+                        foreach (MeshRenderer rend in childRenderersGreen)
+                        {
+                            rend.enabled = false;
+                        }
+                    }
+                    if (distanceToMaskEndPoint < 1.0f)
+                    {
+                        foreach (MeshRenderer rend in childRenderersRed)
+                        {
+                            rend.enabled = false;
+                        }
+                        maskOut = true;
+                    }
+                    else
+                    {
+                        foreach (MeshRenderer rend in childRenderersRed)
+                        {
+                            rend.enabled = true;
+                        }
+                        maskOut = false;
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    if (!maskOut)
+                    {
+                        foreach (MeshRenderer rend in childRenderersGreen)
+                        {
+                            rend.enabled = true;
+                        }
+                        foreach (MeshRenderer rend in childRenderersRed)
+                        {
+                            rend.enabled = false;
+                        }
+                        foreach (MeshRenderer rend in childRenderersBlue)
+                        {
+                            rend.enabled = false;
+                        }
+                    }
+                    if (distanceToMaskEndPoint < 1.0f)
+                    {
+                        foreach (MeshRenderer rend in childRenderersGreen)
+                        {
+                            rend.enabled = false;
+                        }
+                        maskOut = true;
+                    }
+                    else
+                    {
+                        foreach (MeshRenderer rend in childRenderersGreen)
+                        {
+                            rend.enabled = true;
+                        }
+                        maskOut = false;
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    if (!maskOut)
+                    {
+                        foreach (MeshRenderer rend in childRenderersRed)
+                        {
+                            rend.enabled = false;
+                        }
+                        foreach (MeshRenderer rend in childRenderersGreen)
+                        {
+                            rend.enabled = false;
+                        }
+                        foreach (MeshRenderer rend in childRenderersBlue)
+                        {
+                            rend.enabled = true;
+                        }
+                    }
+                    if (distanceToMaskEndPoint < 1.0f)
+                    {
+                        foreach (MeshRenderer rend in childRenderersBlue)
+                        {
+                            rend.enabled = false;
+                        }
+                        maskOut = true;
+                    }
+                    else
+                    {
+                        foreach (MeshRenderer rend in childRenderersBlue)
+                        {
+                            rend.enabled = true;
+                        }
+                        maskOut = false;
+                    }
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+        }
+
+        distanceToMaskEndPoint = Vector3.Distance(maskMovePoint.transform.position, maskEndPoint.transform.position);
+        
+
         if (changingDimension)
         {
-            greenMask.transform.position = Vector3.Lerp(greenMask.transform.position, maskEndPoint.transform.position, 3.0f * Time.deltaTime);
+            maskMovePoint.transform.position = Vector3.Lerp(maskMovePoint.transform.position, maskEndPoint.transform.position, 3.0f * Time.deltaTime);
         }
         else
         {
-            greenMask.transform.position = Vector3.Lerp(greenMask.transform.position, maskStartPoint.transform.position, 3.0f * Time.deltaTime);
+            maskMovePoint.transform.position = Vector3.Lerp(maskMovePoint.transform.position, maskStartPoint.transform.position, 3.0f * Time.deltaTime);
         }    
 
     }
