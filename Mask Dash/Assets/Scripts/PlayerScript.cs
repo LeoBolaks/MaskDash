@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject maskStartPoint;
     public GameObject maskEndPoint;
+    public GameObject maskMovePoint;
     public GameObject greenMask;
 
     public InputActionReference move;
@@ -18,6 +19,10 @@ public class PlayerScript : MonoBehaviour
     public InputActionReference changeDimension;
     public InputActionReference dimUp;
     public InputActionReference dimDown;
+
+    private MeshRenderer[] childRenderersGreen;
+
+    AnimatorStateInfo greenMaskState;
 
 
     public Rigidbody rigidBody;
@@ -55,14 +60,22 @@ public class PlayerScript : MonoBehaviour
     IEnumerator PauseActionCoRoutine()
     {
         actionAvailable = false;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.8f);
         actionAvailable = true;
+    }
+
+    private IEnumerator animateMaskCoRoutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        greenMask.GetComponent<Animator>().SetTrigger("Slowed");
+        maskOut = true;
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        childRenderersGreen = greenMask.GetComponentsInChildren<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -90,6 +103,15 @@ public class PlayerScript : MonoBehaviour
         }
         if (changeDimension.action.WasPressedThisFrame() && actionAvailable)
         {
+            if (maskOut)
+            {
+                greenMask.GetComponent<Animator>().SetTrigger("Resumed");
+                maskOut = false;
+            }
+            else
+            {
+                StartCoroutine(animateMaskCoRoutine());
+            }
             TimeStop();
         }
         ChangeFOV();
@@ -215,14 +237,43 @@ public class PlayerScript : MonoBehaviour
             Vector3 v = rigidBody.linearVelocity;
         v.x = Mathf.Clamp(v.x, -maxSpeed, maxSpeed);
         rigidBody.linearVelocity = v;
-       
-        if (changingDimension)
+
+        greenMask.transform.position = maskMovePoint.transform.position;
+
+        switch(dimension)
         {
-            greenMask.transform.position = Vector3.Lerp(greenMask.transform.position, maskEndPoint.transform.position, 3.0f * Time.deltaTime);
+            case 1:
+                {
+
+                    break;
+                }
+        }
+
+        distanceToMaskEndPoint = Vector3.Distance(maskMovePoint.transform.position, maskEndPoint.transform.position);
+        if (distanceToMaskEndPoint < 1.0f)
+        {
+            foreach(MeshRenderer rend in childRenderersGreen)
+            {
+                rend.enabled = false;
+            }
+            maskOut = true;
         }
         else
         {
-            greenMask.transform.position = Vector3.Lerp(greenMask.transform.position, maskStartPoint.transform.position, 3.0f * Time.deltaTime);
+            foreach (MeshRenderer rend in childRenderersGreen)
+            {
+                rend.enabled = true;
+            }
+            maskOut = false;
+        }
+
+        if (changingDimension)
+        {
+            maskMovePoint.transform.position = Vector3.Lerp(maskMovePoint.transform.position, maskEndPoint.transform.position, 3.0f * Time.deltaTime);
+        }
+        else
+        {
+            maskMovePoint.transform.position = Vector3.Lerp(maskMovePoint.transform.position, maskStartPoint.transform.position, 3.0f * Time.deltaTime);
         }    
 
     }
