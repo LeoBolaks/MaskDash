@@ -33,7 +33,7 @@ public class PlayerScript : MonoBehaviour
     private int dimension = 2;
 
     private float zoomedFOV = 50.0f;
-    private float normalFOV = 90.0f;
+    private float normalFOV = 100.0f;
 
     [SerializeField]private bool canJump = true;
     [SerializeField]private bool airborne = false;
